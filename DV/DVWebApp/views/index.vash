@@ -1,0 +1,128 @@
+﻿@html.extend('layout', function(model){
+
+    @html.block('content', function(model){
+
+<div layout="row" style="height:100%" data-ng-controller="dvVachanaController as dvCtrl" data-ng-init="dvCtrl.Initialize('@model.Authors','@model.Contributors');">
+	<section layout="row" flex>
+		<md-content flex="70%" style="border:thin solid black">
+			<md-toolbar layout-padding layout="row">
+				<div>
+					<md-button class="md-fab md-mini" data-ng-href="/admin">
+						<md-icon>settings</md-icon>
+					</md-button>
+					<!--<md-icon md-font-icon="md-icon-button" data-ng-style="{color:'red', 'font-size': '48px'}">settings</md-icon>-->
+				</div>
+				<div layout-align="center center" flex layout="row" class="md-display-1">
+					ದಿನಕ್ಕೊಂದು ವಚನ
+				</div>
+			</md-toolbar>
+			<form name="dvForm">
+				<div layout="column" layout-padding flex>
+					<div layout="row" layout-align="center center" layout-margin layout-fill>
+						<md-datepicker ng-model="dvCtrl.vachanaObj.Date" data-ng-change="dvCtrl.GetVachana();" required md-placeholder="ದಿನಾಂಕ"></md-datepicker>
+					</div>
+					<div layout="row" layout-align="center center" layout-margin>
+						<md-input-container flex="80">
+							<label>ವಚನ</label>
+							<textarea name="vachana" id="vachana" rows="3" ng-model="dvCtrl.vachanaObj.Vachana" required md-maxlength="150" data-ng-keyup="dvCtrl.setDisplayText(dvCtrl.vachanaObj.Vachana)"
+									  data-ng-focusout="dvCtrl.setDisplayText(dvCtrl.vachanaObj.Vachana)"></textarea>
+							<div ng-messages="dvForm.vachana.$error" ng-show="dvForm.vachana.$dirty">
+								<div ng-message="required">ದಯವಿಟ್ಟು ವಚನವನ್ನು ಬರೆಯಿರಿ!</div>
+								<div ng-message="md-maxlength">ವಚನವು 150 ಶಬ್ದಗಳನ್ನು ಮೀರಬಾರದು!</div>
+							</div>
+						</md-input-container>
+					</div>
+					<div layout="row" layout-align="center center" layout-margin>
+						<md-input-container flex="80">
+							<label>ಸಾರಾಂಶ</label>
+							<textarea name="summary" id="summary" rows="8" ng-model="dvCtrl.vachanaObj.Summary" required md-maxlength="1500" data-ng-keyup="dvCtrl.setDisplayText(dvCtrl.vachanaObj.Summary)"
+									  data-ng-focusout="dvCtrl.setDisplayText(dvCtrl.vachanaObj.Summary)"></textarea>
+							<div ng-messages="dvForm.summary.$error" ng-show="dvForm.summary.$dirty">
+								<div ng-message="required">ದಯವಿಟ್ಟು ವಚನದ ಸಾರಾಂಶವನ್ನು ಬರೆಯಿರಿ!</div>
+								<div ng-message="md-maxlength">ವಚನದ ಸಾರಾಂಶವು 1500 ಶಬ್ದಗಳನ್ನು ಮೀರಬಾರದು!</div>
+							</div>
+						</md-input-container>
+					</div>
+					<div layout="row" layout-align="center center" layout-margin>
+						<md-input-container flex="40">
+							<label>ಲೇಖಕರು</label>
+							<md-select ng-model="dvCtrl.vachanaObj.Author" required>
+								<md-option ng-value="author" ng-repeat="author in dvCtrl.Authors">{{author}}</md-option>
+							</md-select>
+						</md-input-container>
+						<md-input-container flex="40">
+							<label>ಸಂಪಾದಕರು</label>
+							<md-select ng-model="dvCtrl.vachanaObj.Contributor" required>
+								<md-option ng-value="contributor" ng-repeat="contributor in dvCtrl.Contributors">{{contributor}}</md-option>
+							</md-select>
+						</md-input-container>
+					</div>
+					<div layout="row" layout-align="center center">
+						<md-button class="md-raised md-warn" flex="30" data-ng-click="dvCtrl.InsertNewOrUpdateVachana()">ಪ್ರಕಟಿಸಿ</md-button>
+					</div>
+				</div>
+			</form>
+		</md-content>
+		<!--<md-sidenav class="md-sidenva-right" md-is-locked-open="true" md-sidenav-id="righty" md-whiteframe="1" flex="30%" style="border:solid thin black">
+			<md-content layout-padding layout="row" layout-align="center center" style="border:solid thin black; height:100%">
+				<div style="border:solid thin black;height:700px;width:70%;background:red url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0IPGr6eqicFmNGDCfsnzj5Yl2556Uk0Pv_AMN7vH8-UmAcUfh');background-repeat:no-repeat;">
+					this is cool
+				</div>
+
+
+			</md-content>
+		</md-sidenav>-->
+		<md-sidenav md-sidenav-id="righty" md-is-locked-open="true" md-whiteframe="1" flex="30%">
+			<div class="iris">
+				<div class="card transparent z-depth-5">
+					<div class="iris1">
+						{{dvCtrl.displayText }}
+					</div>
+				</div>
+			</div>
+
+		</md-sidenav>
+	</section>
+</div>
+
+	})
+
+	@html.block('footer', function(model){
+
+<script type="text/javascript">
+        // Load the Google Transliteration API
+        google.load("elements", "1", {
+
+            packages: "transliteration"
+        });
+
+        function onLoad() {
+
+            var options = {
+
+                sourceLanguage: 'en',
+                //destinationLanguage: ['ml', 'hi', 'kn', 'ta', 'te'],
+                destinationLanguage: ['kn'],
+                shortcutKey: 'ctrl+m',
+                transliterationEnabled: true
+            };
+
+            // Create an instance on TransliterationControl with the required
+            // options.
+            var control = new google.elements.transliteration.TransliterationControl(options);
+
+            // Enable transliteration in the textfields with the given ids.
+            var ids = ["vachana", "summary"];
+            control.makeTransliteratable(ids);
+
+            // Show the transliteration control which can be used to toggle between
+            // English and Hindi and also choose other destination language.
+            control.showControl('translControl');
+        }
+
+        google.setOnLoadCallback(onLoad);
+</script>
+
+	})
+
+})

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Home Screen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css" />-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--Font Icons-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style type="text/css">
+
+        .md-toast-success .md-toast-content {
+            background: #ffffff !important;
+        }
+
+        .md-toast-success .md-toast-text {
+            color: #00ff21 !important;
+        }
+
+        .md-toast-success .md-button {
+            color: black !important;
+        }
+
+        .md-toast-error .md-toast-content {
+            background: #ffffff !important;
+        }
+
+        .md-toast-error .md-toast-text {
+            color: #ff0000 !important;
+        }
+
+        .md-toast-error .md-button {
+            color: black !important;
+        }
+
+        #div {
+            border: thin black solid;
+        }
+
+        textarea {
+            border: dotted thin !important;
+            border-color: gray !important;
+        }
+
+        #div1 {
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0IPGr6eqicFmNGDCfsnzj5Yl2556Uk0Pv_AMN7vH8-UmAcUfh');
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .iris {
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0IPGr6eqicFmNGDCfsnzj5Yl2556Uk0Pv_AMN7vH8-UmAcUfh');
+            background-repeat: no-repeat;
+            height: 80%;
+            background-size: cover;
+            margin-top: 10%;
+            margin-left: -25%;
+        }
+
+        .iris1 {
+            margin-top: 20%;
+            margin-left: 28%;
+            /*padding-bottom: 30% !important;*/
+            padding-left: 10% !important;
+            width: 60% !important;
+            height: 400px !important;
+            /*max-height: 550px !important;
+            min-height: 250px !important;
+            overflow-x: scroll;
+            overflow-y: scroll;
+            overflow-wrap:break-word;
+            overflow:scroll;*/
+            overflow-y: auto;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+
+    <!-- Angular Material Library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+    <!--Google Translation API-->
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+    <!--Custom Javascript-->
+    <script src="javascripts/Main.js"></script>
+
+</head>
+<body ng-app="dvApp" ng-cloak>
+
+@html.block('content')
+@html.block('footer')
+
+    <script type="text/javascript">
+        // Load the Google Transliteration API
+        google.load("elements", "1", {
+
+            packages: "transliteration"
+        });
+
+        function onLoad() {
+
+            var options = {
+
+                sourceLanguage: 'en',
+                //destinationLanguage: ['ml', 'hi', 'kn', 'ta', 'te'],
+                destinationLanguage: ['kn'],
+                shortcutKey: 'ctrl+m',
+                transliterationEnabled: true
+            };
+
+            // Create an instance on TransliterationControl with the required
+            // options.
+            var control = new google.elements.transliteration.TransliterationControl(options);
+
+            // Enable transliteration in the textfields with the given ids.
+            var ids = ["vachana", "summary"];
+            control.makeTransliteratable(ids);
+
+            // Show the transliteration control which can be used to toggle between
+            // English and Hindi and also choose other destination language.
+            control.showControl('translControl');
+        }
+
+        google.setOnLoadCallback(onLoad);
+    </script>
+
+</body>
+</html>
