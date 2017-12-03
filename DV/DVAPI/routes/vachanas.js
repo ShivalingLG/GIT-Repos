@@ -51,13 +51,20 @@ var SomeModelSchema = new Schema({
 });
 // Compile model from schema
 var VachanaModel = mongoose.model('Vachana', SomeModelSchema);
+var logs = require('./logs');
 //create methods to CRUD
 router.get('/', function (req, res, next) {
     //return all vachanas
     //return res.send("We can not server you everything! You need to order in a restaurant");
     var formattedDate = moment(new Date()).format('MMDDYYYY');
     VachanaModel.find({ TargetDate: formattedDate }, 'Vachana Summary Author Contributor', function (error, result) {
-        res.json(error == null ? result : error);
+        if (error != null) {
+            logs.Log({ level: 'error', source: 'Vachanas API, GET ', message: 'Error Occurred', data: { Error: error, Data: formattedDate } });
+            res.json(error);
+        }
+        else {
+            res.json(result);
+        }
     }).limit(1);
 });
 //insert new vachana
@@ -75,7 +82,13 @@ router.post('/', function (req, res, next) {
     vachanaModelInstance.save(function (error, result) {
         //if (error) return handleError(error);
         // saved!
-        res.json(error == null ? result : error);
+        if (error != null) {
+            logs.Log({ level: 'error', source: 'Vachanas API, POST ', message: 'Error Occurred', data: { Error: error, Data: vachanaFromRequest } });
+            res.json(error);
+        }
+        else {
+            res.json(result);
+        }
     });
 });
 //return one
@@ -84,7 +97,13 @@ router.route('/:date')
     //return vachana basedon date
     var formattedDate = moment(new Date(req.params.date)).format('MMDDYYYY');
     VachanaModel.findOne({ TargetDate: formattedDate }, 'Vachana Summary Author Contributor', function (error, result) {
-        res.json(error == null ? result : error);
+        if (error != null) {
+            logs.Log({ level: 'error', source: 'Vachanas API, GET ', message: 'Error Occurred', data: { Error: error, Data: formattedDate } });
+            res.json(error);
+        }
+        else {
+            res.json(result);
+        }
     });
 });
 router.route('/')
@@ -101,7 +120,13 @@ router.route('/')
             UpdateTS: new Date()
         }
     }, function (error, result) {
-        res.json(error == null ? result : error);
+        if (error != null) {
+            logs.Log({ level: 'error', source: 'Vachanas API, PUT ', message: 'Error Occurred', data: { Error: error, Data: vachanaFromRequest } });
+            res.json(error);
+        }
+        else {
+            res.json(result);
+        }
     });
 });
 exports.default = router;

@@ -5,12 +5,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 var express = require("express");
 var bodyParser = require('body-parser');
+
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 var router = express.Router();
 app.use(router);
 //import the mongoose module
+
 var mongoose = require('mongoose');
 //Get the default connection
 var db = mongoose.connection;
@@ -38,10 +41,23 @@ var associatesModelSchema = new Schema({
 });
 // Compile model from schema
 var AssociatesModel = mongoose.model('Associates', associatesModelSchema);
+
+var logs = require('./logs');
+
 //create methods to CRUD
 router.get('/', function (req, res, next) {
     AssociatesModel.find({ Status: true }, 'Authors Contributors', function (error, result) {
-        res.json(error == null ? result : error);
+
+        if (error != null) {
+
+            logs.Log({ level: 'error', source: 'Associates API, GET ', message: 'Error Occurred', data: { Error: error, Data: '' } });
+            res.json(error);
+
+        } else {
+
+            res.json(result);
+        }
+
     }).limit(1);
 });
 //insert new vachana
@@ -61,7 +77,15 @@ router.post('/', function (req, res, next) {
     associatesModelInstance.save(function (error, result) {
         //if (error) return handleError(error);
         // saved!
-        res.json(error == null ? result : error);
+        if (error != null) {
+
+            logs.Log({ level: 'error', source: 'Associates API, POST ', message: 'Error Occurred', data: { Error: error, Data: associatesFromRequest } });
+            res.json(error);
+
+        } else {
+
+            res.json(result);
+        }
     });
 });
 exports.default = router;

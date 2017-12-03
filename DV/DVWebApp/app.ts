@@ -59,8 +59,22 @@ app.use((err: any, req, res, next) => {
     });
 });
 
+
+var ApiHostUrl = "http://localhost:1234/API/";
+
 app.set('port', process.env.PORT || 3456);
 
 var server = app.listen(app.get('port'), function () {
-    debug('Express server listening on port ' + server.address().port);
+
+    //debug('Express server listening on port ' + server.address().port);    
+    httpRestclient.post(ApiHostUrl + "Logs", {
+        level: 'info',
+        source: 'DV Web App',
+        message: 'Express server listening on port ',
+        data: { portNum: server.address().port }
+    },
+        function (data, response) {
+
+
+        });
 });

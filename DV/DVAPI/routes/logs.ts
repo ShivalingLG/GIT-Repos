@@ -4,54 +4,61 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * GET home page.
  */
 var express = require("express");
-var moment = require("moment");
 var router = express.Router();
+
 var bodyParser = require('body-parser');
 var app = express();
+
 //parsers
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-//import the mongoose module
-var mongoose = require('mongoose');
-//Get the default connection
-var db = mongoose.connection;
-//Bind connection to error event (to get notification of connection errors)
-db.on('error', console.error.bind(console, 'From Vachanas Page : MongoDB connection error:'));
-//Define a schema
-var Schema = mongoose.Schema;
-var SomeModelSchema = new Schema({
-    Message: {
-        type: String,
-        required: true
-    },
-    CreateTS: {
-        type: Date,
-        required: true
-    }
+
+//LOGGING
+const winston = require('winston');
+require('winston-mongodb');
+
+const logger = new (winston.Logger)({
+    transports: [
+        //new (winston.transports.Console)(),
+        //new (winston.transports.File)({ filename: 'somefile.log' })
+        new (winston.transports.MongoDB)({ db: 'mongodb://localhost:27017/DVDB' })
+    ]
 });
-// Compile model from schema
-var LogsModel = mongoose.model('DVLogs', SomeModelSchema);
+
+exports.Log = function (logDataFromRequest) {
+
+    logger.log(logDataFromRequest.level,
+        'Source : ' + logDataFromRequest.source + ' ; Message : ' + logDataFromRequest.message,
+        logDataFromRequest.data);
+};
+
 //create methods to CRUD
 router.get('/', function (req, res, next) {
 
-    LogsModel.find({}, 'Message CreateTS', function (error, result) {
-        res.json(error == null ? result : error);
-    });
-});
-//insert new vachana
-router.post('/', function (req, res, next) {
-    var messageFromRequest = req.body;
+    logger.query({},
+        function (err, results) {
 
-    var logsModelInstance = new LogsModel({
-        Message: messageFromRequest,
-        CreateTS: new Date()
-    });
-    logsModelInstance.save(function (error, result) {
-        //if (error) return handleError(error);
-        // saved!
-        res.json(error == null ? result : error);
-    });
+            if (err) {
+
+                res.json(err);
+            }
+
+            res.json(results);
+        });
+});
+//insert logs
+router.post('/', function (req, res, next) {
+
+    var logDataFromRequest = req.body;
+    /*{
+        level: 'info',
+    source:'Mobile App'
+            message :'',
+            data:{ }
+            }*/
+
+    logger.log(logDataFromRequest.level, 'Source : ' + logDataFromRequest.source + ' ; Message : ' + logDataFromRequest.message, logDataFromRequest.data);
+    res.json('success');
 });
 
 exports.default = router;
-//# sourceMappingURL=vachanas.js.map

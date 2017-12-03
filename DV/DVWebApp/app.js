@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var debug = require("debug");
 var express = require("express");
 var path = require("path");
 //import vwejs = require('ejs');
@@ -49,8 +48,16 @@ app.use(function (err, req, res, next) {
         error: {}
     });
 });
+var ApiHostUrl = "http://localhost:1234/API/";
 app.set('port', process.env.PORT || 3456);
 var server = app.listen(app.get('port'), function () {
-    debug('Express server listening on port ' + server.address().port);
+    //debug('Express server listening on port ' + server.address().port);    
+    httpRestclient.post(ApiHostUrl + "Logs", {
+        level: 'info',
+        source: 'DV Web App',
+        message: 'Express server listening on port ',
+        data: { portNum: server.address().port }
+    }, function (data, response) {
+    });
 });
 //# sourceMappingURL=app.js.map
