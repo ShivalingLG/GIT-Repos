@@ -4,7 +4,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * GET home page.
  */
 var express = require("express");
+
 var moment = require("moment");
+moment.suppressDeprecationWarnings = true;
+
 var router = express.Router();
 var bodyParser = require('body-parser');
 var app = express();
