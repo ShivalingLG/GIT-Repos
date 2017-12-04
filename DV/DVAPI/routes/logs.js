@@ -29,7 +29,6 @@ router.get('/', function (req, res, next) {
         if (err) {
             res.json(err);
         }
-        console.log(results);
         res.json(results);
     });
 });

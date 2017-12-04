@@ -95,7 +95,7 @@ router.post('/', function (req, res, next) {
 router.route('/:date')
     .get(function (req, res, next) {
     //return vachana basedon date
-    var formattedDate = moment(new Date(req.params.date)).format('MMDDYYYY');
+    var formattedDate = moment(req.params.date).format('MMDDYYYY');
     VachanaModel.findOne({ TargetDate: formattedDate }, 'Vachana Summary Author Contributor', function (error, result) {
         if (error != null) {
             logs.Log({ level: 'error', source: 'Vachanas API, GET ', message: 'Error Occurred', data: { Error: error, Data: formattedDate } });
